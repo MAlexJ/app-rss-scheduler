@@ -1,0 +1,38 @@
+server:
+  port: ${SERVICE_PORT:8080}
+
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: ${SERVICE_NAME:app-rss-scheduler}
+  data:
+    mongodb:
+      uri: ${SERVICE_MONGODB_URI:uri}
+      database: ${SERVICE_MONGODB_DATABASE:app-rss-scheduler-db}
+      auto-index-creation: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+
+jwt:
+  app:
+    provide_security: ${SERVICE_PROVIDE_JWT_SECURITY:true}
+    secret: ${SERVICE_JWT_SECRET_KEY:jwt_key}
+    token: ${SERVICE_JWT_TOKEN:token}
+
+
+app-subscription-service:
+  url: http://localhost:8083
+  endpoint: /v1/subscriptions
+
+
+scheduled:
+  subscriptions:
+    processing: ${SCHEDULER_RSS_PROCESSING_CRONE:0 */15 * * * *}
+  rss:
+    processing: ${SCHEDULER_SUBSCRIPTION_PROCESSING_CRONE:0 */5 * * * *}
